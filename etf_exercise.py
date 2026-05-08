@@ -314,7 +314,7 @@ if __name__ == '__main__':
     
    #inputs_path = r'C:\Users\Leonardo\Desktop\Personal\S&P500_test'
    inputs_path = '.' # Para el trabajo con agentes, en local usar la ruta completa.
-   inputs_file = r'Python assessment.xlsx'
+   inputs_file = r'PythonAssessment.xlsx'
    inputs_sheet_name = r'Start Universe'
 
        
@@ -342,10 +342,11 @@ if __name__ == '__main__':
        print(f'Minimization for {date} : {result[1]}')
        index = portfolios_weighted[-1]
 
-with pd.ExcelWriter(parameters.inputs_path + os.sep +
-                         parameters.inputs_file, engine='openpyxl') as writer:
-    writer.book = load_workbook(r"PythonAssessment.xlsx")
-    portfolios_weighted[0].to_excel(writer, sheet_name='Dic_2017_test_1_2', 
-                               float_format="%.6f", index=False)
-    portfolios_weighted[1].to_excel(writer, sheet_name='Jun_2018_test_1_2', 
-                               float_format="%.6f", index=False)
+   output_file = parameters.inputs_path + os.sep + parameters.inputs_file
+   book = load_workbook(output_file)
+   with pd.ExcelWriter(output_file, engine='openpyxl') as writer:
+       writer.book = book
+       portfolios_weighted[0].to_excel(writer, sheet_name='Dic_2017_test_1_2', 
+                                  float_format="%.6f", index=False)
+       portfolios_weighted[1].to_excel(writer, sheet_name='Jun_2018_test_1_2', 
+                                  float_format="%.6f", index=False)
