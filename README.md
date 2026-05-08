@@ -12,6 +12,12 @@ The tool processes the rebalancing dates and outputs the optimized weights to a 
 
 ![Terminal Execution Results](works.png)
 
+## Agent-Ready Architecture
+This project is built with an **Agentic Workflow** mindset. The modular structure allows for seamless integration with AI Agents (such as Open Agent Manager):
+- **Predictable I/O**: Clear separation of input/output for autonomous data handling.
+- **Structured Logs**: Clean terminal outputs for LLM parsing and monitoring.
+- **Modular Design**: Easy to wrap into a Tool/Skill for an Agentic AI system.
+
 ## Setup
 1. Create a virtual environment: `python -m venv venv`
 2. Activate it: `source venv/bin/activate`
