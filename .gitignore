@@ -1,0 +1,6 @@
+venv/
+__pycache__/
+*.pyc
+Excel_Writing Exercise_Questions.docx
+PythonAssessment.xlsx
+README.md
