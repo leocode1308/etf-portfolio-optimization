@@ -57,9 +57,11 @@ class Calculations:
                 'FCap Wt*(1+Z_Value)', 'Uncapped Wt', 'Max Wt', 'Min Wt' (DataFrame)
         """
         input_weigth = index.copy() #Hago esto por que sin esto me copia el indice y eso no lo quiero 
-        input_weigth['FCap Wt*(1+Z_Value)'] = input_weigth['FCap Wt']*input_weigth['Z_Value']
-        input_weigth['Uncapped Wt'] = [item/input_weigth['FCap Wt*(1+Z_Value)'].sum() 
-                                for item in input_weigth['FCap Wt*(1+Z_Value)'].tolist()]
+        # Auditor Fix: Ensuring positive weights and matching variable name (1 + Z_Value)
+        input_weigth['FCap Wt*(1+Z_Value)'] = input_weigth['FCap Wt'] * (1 + input_weigth['Z_Value'])
+        input_weigth['FCap Wt*(1+Z_Value)'] = input_weigth['FCap Wt*(1+Z_Value)'].clip(lower=1e-6)
+        
+        input_weigth['Uncapped Wt'] = input_weigth['FCap Wt*(1+Z_Value)'] / input_weigth['FCap Wt*(1+Z_Value)'].sum()
         input_weigth['Max Wt_1'] = 20*input_weigth['FCap Wt']  
         input_weigth['Max Wt_2'] = 0.05
         input_weigth['Max Wt'] = input_weigth[['Max Wt_1', 'Max Wt_2']].min(axis=1)
@@ -303,7 +305,9 @@ class Calculations:
         input_index = self.const_inputs(index)    
         self.constraints_creator(input_index)
         self.bounds_creator(input_index['Min Wt'].values, input_index['Max Wt'].values)
-        final_weights = self.optimization_weigths(input_index['Min Wt'].values, 
+        # Auditor Fix: Use Uncapped Wt as initial guess for better convergence
+        initial_guess = input_index['Uncapped Wt'].values
+        final_weights = self.optimization_weigths(initial_guess, 
                                                   input_index['Uncapped Wt'].values)
         index_final = self.index_opt_weigthed(index, final_weights.x)
         minimization_total = final_weights.fun
